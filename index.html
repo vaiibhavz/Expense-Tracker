@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="logo">
+            Expense <span class="highlight">Tracker</span>
+        </div>
+        <div class="topbar-right">
+            <button class="icon-btn"><i data-lucide="moon"></i></button>
+            <div class="profile">
+                <img src="https://ui-avatars.com/api/?name=Vaibhav+C&background=random" alt="Profile">
+                <div class="profile-info">
+                    <span class="name">Vaibhav C</span>
+                    <span class="role">UX Designer</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar-floating">
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><i data-lucide="home"></i></a></li>
+                    <li><a href="#"><i data-lucide="line-chart"></i></a></li>
+                    <li><a href="#"><i data-lucide="wallet"></i></a></li>
+                    <li><a href="#"><i data-lucide="settings"></i></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <div class="dashboard-content">
+                <!-- Summary Section -->
+                <section class="summary-section">
+                    <div class="section-header">
+                        <h2>Summary</h2>
+                        <div class="date-filter">
+                            <i data-lucide="calendar"></i> This Month <i data-lucide="chevron-down"
+                                class="small-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="balance-card">
+                        <div class="balance-info">
+                            <p>Balance</p>
+                            <h3>1,46,557 <span class="currency">₹</span></h3>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="segment expense"></div>
+                                <div class="segment investment"></div>
+                                <div class="segment savings"></div>
+                                <div class="segment remaining"></div>
+                            </div>
+                            <div class="legend">
+                                <div class="legend-item"><span class="dot expense"></span> Expenses</div>
+                                <div class="legend-item"><span class="dot investment"></span> Investment</div>
+                                <div class="legend-item"><span class="dot savings"></span> Savings</div>
+                                <div class="legend-item"><span class="dot remaining"></span> Remaining</div>
+                                <div class="spend-info">You have <strong>7.4%</strong> money remaining to spend</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metric Cards Grid -->
+                    <div class="metrics-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="label income">Income</span>
+                            </div>
+                            <div class="card-value">86,467 <span class="currency">₹</span></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="label expense">Expenses</span>
+                                <span class="pill bg-expense-light">53.1%</span>
+                            </div>
+                            <div class="card-value">43,780 <span class="currency">₹</span></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="label investment">Investment</span>
+                                <span class="pill bg-investment-light">15.2%</span>
+                            </div>
+                            <div class="card-value">20,000 <span class="currency">₹</span></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="label savings">Savings</span>
+                                <span class="pill bg-savings-light">24.3%</span>
+                            </div>
+                            <div class="card-value">12,500 <span class="currency">₹</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="activity-section">
+                    <div class="section-header">
+                        <h2>Activity</h2>
+                        <div class="actions">
+                            <button class="btn-icon"><i data-lucide="upload"></i></button>
+                            <button class="btn-icon" style="display: none;"><i data-lucide="arrow-up-down"></i>
+                                Sort</button>
+                            <button id="add-btn" class="btn-primary"><i data-lucide="plus"></i> Add</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Description</th>
+                                    <th>Payment Method</th>
+                                    <th>Tag</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="transaction-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Add New Transaction</h2>
+                <button id="close-modal-btn" class="close-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Amount</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="amount-input" placeholder="Enter amount">
+                        <span class="currency-icon">₹</span>
+                    </div>
+                    <span class="error-msg" id="error-amount"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="description-input" placeholder="Enter description">
+                    </div>
+                    <span class="error-msg" id="error-description"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <div class="input-with-icon">
+                        <input type="date" id="date-input" placeholder="DD/MM/YY">
+                        <span class="calendar-icon"><i data-lucide="calendar"></i></span>
+                    </div>
+                    <span class="error-msg" id="error-date"></span>
+                </div>
+
+                <div class="form-group">
+                    <!-- Segmented Control for Tags -->
+                    <div class="tag-selector">
+                        <div class="tag-option" data-value="Income">Income</div>
+                        <div class="tag-option" data-value="Expense">Expense</div>
+                        <div class="tag-option" data-value="Investment">Investment</div>
+                        <div class="tag-option" data-value="Saving">Saving</div>
+                    </div>
+                    <span class="error-msg" id="error-tag"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-with-icon">
+                        <select id="payment-input">
+                            <option value="" disabled selected>Payment Method</option>
+                            <option value="Cash">Cash</option>
+                            <option value="VISA">VISA</option>
+                            <option value="UPI">UPI</option>
+                            <option value="RuPay">RuPay</option>
+                            <option value="MasterCard">MasterCard</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="EMI">EMI</option>
+                        </select>
+                        <span class="chevron-icon"><i data-lucide="chevron-down"></i></span>
+                    </div>
+                    <span class="error-msg" id="error-payment"></span>
+                </div>
+
+                <button id="add-transaction-btn" class="btn-primary btn-full"
+                    style="width: 100%; justify-content: center;">Add</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
