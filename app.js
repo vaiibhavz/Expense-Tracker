@@ -126,6 +126,7 @@ const ui = {
     modal: null,
     closeModalBtn: null,
     addBtn: null,
+    exportBtn: null,
     addTransactionBtn: null,
     amountInput: null,
     descriptionInput: null,
@@ -141,6 +142,45 @@ const ui = {
 };
 
 let currentEditIndex = null;
+
+function exportToCSV() {
+    if (activityData.length === 0) {
+        alert('No data to export');
+        return;
+    }
+
+    // Prepare CSV headers
+    const headers = ['Date', 'Amount (₹)', 'Description', 'Payment Method', 'Tag'];
+    
+    // Prepare CSV rows
+    const rows = activityData.map(item => [
+        item.date,
+        item.amount,
+        item.description,
+        item.method,
+        item.tag
+    ]);
+
+    // Create CSV content
+    let csvContent = headers.map(h => `"${h}"`).join(',') + '\n';
+    csvContent += rows.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const timestamp = new Date().toISOString().slice(0, 10);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `expense-tracker-${timestamp}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 function sortData() {
     activityData.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -296,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ui.modal = document.getElementById('transaction-modal');
     ui.closeModalBtn = document.getElementById('close-modal-btn');
     ui.addBtn = document.getElementById('add-btn');
+    ui.exportBtn = document.getElementById('export-btn');
     ui.addTransactionBtn = document.getElementById('add-transaction-btn');
     ui.amountInput = document.getElementById('amount-input');
     ui.descriptionInput = document.getElementById('description-input');
@@ -332,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Listeners
     if (ui.addBtn) ui.addBtn.addEventListener('click', () => openModal(null));
+    if (ui.exportBtn) ui.exportBtn.addEventListener('click', exportToCSV);
 
     if (ui.tableBody) {
         ui.tableBody.addEventListener('click', (e) => {
